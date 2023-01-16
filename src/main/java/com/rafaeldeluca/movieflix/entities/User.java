@@ -1,4 +1,4 @@
-package com.rafaeldeluca.movifliex.entities;
+package com.rafaeldeluca.movieflix.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
