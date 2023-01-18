@@ -2,6 +2,9 @@ package com.rafaeldeluca.movifliex.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import com.rafaeldeluca.movieflix.entities.Review;
 
 public class ReviewDTO implements Serializable {
@@ -9,6 +12,9 @@ public class ReviewDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	
+	@Size(min=3, max=50, message="Tamanho mínimo de 3 caracteres e máximo de 50 para as reviews")
+	@NotBlank(message = "O campo texto da review não pode ser vazio")
 	private String text;
 	private MovieDTO movie;
 	private Long movieId;
@@ -20,8 +26,8 @@ public class ReviewDTO implements Serializable {
 
 	public ReviewDTO(Long id, String text, Long movieId, UserDTO user) {
 
-		this.id = id;
-		this.text = text;
+		this.id = id;		
+		this.text = text;		
 		this.movieId = movieId;
 		this.user = user;
 	}
