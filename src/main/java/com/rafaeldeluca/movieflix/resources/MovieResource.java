@@ -1,5 +1,7 @@
 package com.rafaeldeluca.movieflix.resources;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rafaeldeluca.movieflix.services.MovieService;
+import com.rafaeldeluca.movieflix.services.ReviewService;
 import com.rafaeldeluca.movifliex.dto.MovieDTO;
+import com.rafaeldeluca.movifliex.dto.ReviewDTO;
 
 @RestController
 @RequestMapping(value = "/movies")
@@ -20,6 +24,9 @@ public class MovieResource {
 	
 	@Autowired
 	private MovieService service;
+	
+	@Autowired
+	private ReviewService reviewService;
 	
 	@GetMapping
 	public ResponseEntity<Page<MovieDTO>> findAll (
@@ -39,6 +46,12 @@ public class MovieResource {
 	public ResponseEntity<MovieDTO>findById(@PathVariable Long id) {
 		MovieDTO movieDTO = service.findById(id);
 		return ResponseEntity.ok().body(movieDTO);
-	}	
+	}
+	
+	@GetMapping(value="/{movieId}/reviews")
+	public ResponseEntity<List<ReviewDTO>> findMovieReviews(@PathVariable Long movieId) {
+		List<ReviewDTO> lista = reviewService.findByMovie(movieId);
+		return ResponseEntity.ok(lista);
+	}
 
 }

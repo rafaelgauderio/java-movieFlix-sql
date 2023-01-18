@@ -16,17 +16,15 @@ public class ReviewDTO implements Serializable {
 
 	public ReviewDTO() {
 
-	}	
+	}
 
 	public ReviewDTO(Long id, String text, Long movieId, UserDTO user) {
-		
+
 		this.id = id;
 		this.text = text;
 		this.movieId = movieId;
 		this.user = user;
 	}
-
-
 
 	public ReviewDTO(Review entity) {
 		this.id = entity.getId();
@@ -73,7 +71,6 @@ public class ReviewDTO implements Serializable {
 
 	public void setUser(UserDTO user) {
 		this.user = user;
-	}	
-	
+	}
 
 }
