@@ -64,5 +64,12 @@ public class ReviewService {
 		}
 
 	}
+	
+	@Transactional(readOnly=true)
+	public List<ReviewDTO> findAll () {
+		List<Review> lista = reviewRepository.findAll();
+		return lista.stream().map(x -> new ReviewDTO(x)).collect(Collectors.toList());
+		
+	}
 
 }
