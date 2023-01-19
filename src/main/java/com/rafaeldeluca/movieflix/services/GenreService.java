@@ -7,12 +7,14 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rafaeldeluca.movieflix.entities.Genre;
-import com.rafaeldeluca.movieflix.entities.User;
 import com.rafaeldeluca.movieflix.repositories.GenreRepository;
+import com.rafaeldeluca.movieflix.services.exceptions.DataBaseException;
 import com.rafaeldeluca.movieflix.services.exceptions.ResourceNotFoundException;
 import com.rafaeldeluca.movifliex.dto.GenreDTO;
 
@@ -21,9 +23,6 @@ public class GenreService {
 
 	@Autowired
 	private GenreRepository repository;
-	
-	@Autowired
-	private AuthService authService;
 
 	@Transactional(readOnly = true)
 	public List<GenreDTO> findAll() {
@@ -58,14 +57,24 @@ public class GenreService {
 
 	@Transactional(readOnly = false) // update e save tem que poder alterar o database
 	public GenreDTO insert(GenreDTO dto) {
-		
-		User usuario = authService.authenticated();
-		
+
 		Genre entity = new Genre();
 		entity.setName(dto.getName());
 		entity = repository.save(entity);
 		return new GenreDTO(entity);
 
+	}
+
+	@Transactional(readOnly = false)
+	public void delete(Long id) {
+
+		try {
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException error) {
+			throw new ResourceNotFoundException("Id informado não foi encontrado: " + id);
+		} catch (DataIntegrityViolationException erro) {
+			throw new DataBaseException("Violação de integridade de banco de dados!");
+		}
 	}
 
 }

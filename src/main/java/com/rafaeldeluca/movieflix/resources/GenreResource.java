@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,10 +44,11 @@ public class GenreResource {
 
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<GenreDTO> update(@PathVariable Long id, @Valid @RequestBody GenreDTO genreDTO) {
-		genreDTO = service.update(id, genreDTO);	;
+		genreDTO = service.update(id, genreDTO);
+		;
 		return ResponseEntity.ok().body(genreDTO);
 	}
-	
+
 	@PreAuthorize("hasAnyRole('MEMBER')")
 	@PostMapping
 	public ResponseEntity<GenreDTO> insert(@Valid @RequestBody GenreDTO genreDTO) {
@@ -55,6 +57,12 @@ public class GenreResource {
 				.toUri();
 		return ResponseEntity.created(uri).body(genreDTO);
 
+	}
+
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		service.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 
 }
