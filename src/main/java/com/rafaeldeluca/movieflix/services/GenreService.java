@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.rafaeldeluca.movieflix.entities.Genre;
+import com.rafaeldeluca.movieflix.entities.User;
 import com.rafaeldeluca.movieflix.repositories.GenreRepository;
 import com.rafaeldeluca.movieflix.services.exceptions.ResourceNotFoundException;
 import com.rafaeldeluca.movifliex.dto.GenreDTO;
@@ -20,6 +21,9 @@ public class GenreService {
 
 	@Autowired
 	private GenreRepository repository;
+	
+	@Autowired
+	private AuthService authService;
 
 	@Transactional(readOnly = true)
 	public List<GenreDTO> findAll() {
@@ -50,6 +54,18 @@ public class GenreService {
 
 			throw new ResourceNotFoundException("Não foi encontrada o gênero para o id informado: " + id);
 		}
+	}
+
+	@Transactional(readOnly = false) // update e save tem que poder alterar o database
+	public GenreDTO insert(GenreDTO dto) {
+		
+		User usuario = authService.authenticated();
+		
+		Genre entity = new Genre();
+		entity.setName(dto.getName());
+		entity = repository.save(entity);
+		return new GenreDTO(entity);
+
 	}
 
 }
